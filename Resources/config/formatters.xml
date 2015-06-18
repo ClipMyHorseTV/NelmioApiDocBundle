@@ -56,6 +56,9 @@
             <call method="setAuthentication">
                 <argument>%nelmio_api_doc.sandbox.authentication%</argument>
             </call>
+            <call method="setDefaultHeader">
+                <argument>%nelmio_api_doc.sandbox.default_header%</argument>
+            </call>
             <call method="setDefaultSectionsOpened">
                 <argument>%nelmio_api_doc.default_sections_opened%</argument>
             </call>

@@ -32,17 +32,28 @@
                     {% endfor %}
                     {% endif %}
                     </select>
+                    {% if defaultHeader %}
+                        {% for header in defaultHeader %}
+                            <span class="default_request_header">
+                                <span>{{ header }}: </span>
+                                <input type="text" id="{{ header }}" data-header-name="{{ header }}"/>
+                            </span>
+                        {% endfor %}
+                    {% endif %}
                     {% if authentication %}
                         {% if authentication.delivery == 'http' and authentication.type == 'basic' %}
                             api login: <input type="text" id="api_login" value=""/>
                             api password: <input type="text" id="api_pass" value=""/>
                         {% elseif authentication.delivery in ['query', 'http', 'header'] %}
-                            api key: <input type="text" id="api_key" value=""/>
+                            auth token: <input type="text" id="api_key" value=""/>
                         {% endif %}
 
                         {% if authentication.custom_endpoint %}
                             api endpoint: <input type="text" id="api_endpoint" value=""/>
                         {% endif %}
+
+                    {% endif %}
+                    {% if authentication or defaultHeader %}
                         <button id="save_api_auth" type="button">Save</button>
                         <button id="clear_api_auth" type="button">Clear</button>
                     {% endif %}
@@ -178,6 +189,13 @@
                             elm.val(getStoredValue(value));
                         }
                     });
+
+                    $.each(default_request_header, function(index, value) {
+                        var elm = $('#' + value);
+                        if (elm.length) {
+                            elm.val(getStoredValue(value));
+                        }
+                    });
                 }
 
                 var setParameterType = function ($context,setType) {
@@ -284,6 +302,14 @@
                             storeValue(value, elm.val());
                         }
                     });
+
+                    $.each(default_request_header, function(index, value) {
+                        var elem = $('#' + value);
+                        if (elem.length) {
+                            storeValue(value, elem.val());
+                        }
+                    });
+
                 });
 
                 $('#clear_api_auth').click(function(event) {
@@ -292,6 +318,14 @@
                         var elm = $('#' + value);
                         if (elm.length) {
                             elm.val('');
+                        }
+                    });
+
+                    $.each(default_request_header, function(index, value) {
+                        deleteStoredValue(value);
+                        var elem = $('#' + value);
+                        if (elem.length) {
+                            elem.val('');
                         }
                     });
                 });
@@ -535,6 +569,11 @@
                         body = params;
                     }
                     var data = content.length ? content : body;
+
+                    $('.default_request_header').each(function(index, value) {
+                        var elem = $(value).find('input');
+                        headers[elem.attr('data-header-name')] = elem.val()
+                    });
                     var ajaxOptions = {
                         url: (url.indexOf('http')!=0?endpoint:'') + url,
                         type: method,
@@ -697,7 +736,7 @@
                     $element.find('input.value').val(content_type);
 
                 });
-
+                var default_request_header = {{ defaultHeader | json_encode | raw }};
                 {% if authentication and authentication.delivery == 'http' %}
                 var authentication_delivery = '{{ authentication.delivery }}';
                 var api_key_parameter = '{{ authentication.name }}';

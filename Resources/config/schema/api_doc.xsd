@@ -31,6 +31,7 @@
         <xsd:attribute name="body_format" type="body_format_enum"/>
         <xsd:attribute name="request_format" type="request_format"/>
         <xsd:attribute name="authentication" type="authentication"/>
+        <xsd:attribute name="default_header" type="default_header"/>
     </xsd:complexType>
 
     <xsd:simpleType name="body_format_enum">
@@ -64,6 +65,11 @@
         <xsd:attribute name="delivery" type="authentication_delivery_enum"/>
         <xsd:attribute name="type" type="xsd:string"/>
         <xsd:attribute name="custom_endpoint" type="xsd:boolean" default="false"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="default_header">
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="value" type="xsd:string"/>
     </xsd:complexType>
 
     <xsd:simpleType name="authentication_delivery_enum">

@@ -71,6 +71,11 @@ class HtmlFormatter extends AbstractFormatter
     private $authentication;
 
     /**
+     * @var array
+     */
+    private $defaultHeader;
+
+    /**
      * @var string
      */
     private $motdTemplate;
@@ -86,6 +91,14 @@ class HtmlFormatter extends AbstractFormatter
     public function setAuthentication(array $authentication = null)
     {
         $this->authentication = $authentication;
+    }
+
+    /**
+     * @param array $defaultHeader
+     */
+    public function setDefaultHeader(array $defaultHeader = null)
+    {
+        $this->defaultHeader = $defaultHeader;
     }
 
     /**
@@ -227,6 +240,7 @@ class HtmlFormatter extends AbstractFormatter
         return array(
             'apiName'               => $this->apiName,
             'authentication'        => $this->authentication,
+            'defaultHeader'        => $this->defaultHeader,
             'endpoint'              => $this->endpoint,
             'enableSandbox'         => $this->enableSandbox,
             'requestFormatMethod'   => $this->requestFormatMethod,
